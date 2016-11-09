@@ -1,6 +1,6 @@
 {
     "name": "jvandeweghe/ipp",
-    "description": "An IPP parser for PHP, following RFC 2910",
+    "description": "An IPP parser for PHP, following RFC 2910/2911",
     "type": "library",
     "require-dev": {
         "phpunit/phpunit": "^5.6"

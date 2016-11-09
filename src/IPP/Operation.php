@@ -28,14 +28,13 @@ class Operation {
      * @param $body
      * @return Operation
      */
-    public static function buildFromRequest($body) {
+    public static function buildFromRequestBody($body) {
         $majorVersion = unpack("C", substr($body, 0, 1))[1];
         $minorVersion = unpack("C", substr($body, 1, 1))[1];
         $operationIdOrStatusCode = unpack("s", substr($body, 2, 2))[1];
         $requestId = unpack("l", substr($body, 4, 4))[1];
 
         //TODO: Attribute group, attribute, and then data parsing
-
         return new Operation($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId);
     }
 
