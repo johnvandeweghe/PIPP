@@ -1,57 +1,56 @@
 <?php
 
-namespace IPP;
+namespace jvandeweghe\IPP;
 
 class Operation {
-    protected $versionNumber;
+    protected $majorVersion;
+    protected $minorVersion;
+    protected $operationIdOrStatusCode;
     protected $requestId;
 
     /**
      * Operation constructor.
-     * @param int $versionNumber
+     * @param int $majorVersion
+     * @param int $minorVersion
+     * @param int $operationIdOrStatusCode
      * @param int $requestId
      */
-    public function __construct($versionNumber, $requestId) {
-        $this->versionNumber = $versionNumber;
+    public function __construct($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId) {
+        $this->majorVersion = $majorVersion;
+        $this->minorVersion = $minorVersion;
+        $this->operationIdOrStatusCode = $operationIdOrStatusCode;
         $this->requestId = $requestId;
     }
 
-    /*
-     *
-   An operation request or response is encoded as follows:
-
-   -----------------------------------------------
-   |                  version-number             |   2 bytes  - required
-   -----------------------------------------------
-   |               operation-id (request)        |
-   |                      or                     |   2 bytes  - required
-   |               status-code (response)        |
-   -----------------------------------------------
-   |                   request-id                |   4 bytes  - required
-   -----------------------------------------------
-   |                 attribute-group             |   n bytes - 0 or more
-   -----------------------------------------------
-   |              end-of-attributes-tag          |   1 byte   - required
-   -----------------------------------------------
-   |                     data                    |   q bytes  - optional
-   -----------------------------------------------
+    /**
+     * Parse as per RFC2910 Section 3.1
+     * Boundaries and types are defined in 3.4.X
+     * @param $body
+     * @return Operation
      */
-
-
     public static function buildFromRequest($body) {
-        $versionNumber = substr($body, 0, 2);
-        $requestId = substr($body, 4, 4);
+        $majorVersion = unpack("C", substr($body, 0, 1))[1];
+        $minorVersion = unpack("C", substr($body, 1, 1))[1];
+        $operationIdOrStatusCode = unpack("s", substr($body, 2, 2))[1];
+        $requestId = unpack("l", substr($body, 4, 4))[1];
 
-        return new Operation($versionNumber, $requestId);
+        //TODO: Attribute group, attribute, and then data parsing
+
+        return new Operation($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId);
     }
-
-
 
     /**
      * @return int
      */
-    public function getVersionNumber() {
-        return $this->versionNumber;
+    public function getMajorVersion() {
+        return $this->majorVersion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinorVersion() {
+        return $this->minorVersion;
     }
 
     /**
@@ -60,4 +59,13 @@ class Operation {
     public function getRequestId() {
         return $this->requestId;
     }
+
+    /**
+     * @return int
+     */
+    public function getOperationIdOrStatusCode() {
+        return $this->operationIdOrStatusCode;
+    }
+
+
 }
