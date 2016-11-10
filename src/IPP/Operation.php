@@ -2,7 +2,6 @@
 
 namespace jvandeweghe\IPP;
 
-//TODO: write toBinary methods
 class Operation {
     //Delimiter tag: (RFC2910 Section 3.5.1)
     private static $END_OF_ATTRIBUTES_BOUNDARY = 0x03;
@@ -71,6 +70,23 @@ class Operation {
         $data = substr($body, $endOfAttributesTag + 1);
 
         return new Operation($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId, $attributeGroups, $data);
+    }
+
+    public function toBinary() {
+        $data = pack("C", $this->getMajorVersion());
+        $data .= pack("C", $this->getMinorVersion());
+        $data .= pack("n", $this->getOperationIdOrStatusCode());
+        $data .= pack("N", $this->getRequestId());
+
+        foreach($this->getAttributeGroups() as $attributeGroup) {
+            $data .= $attributeGroup->toBinary();
+        }
+
+        $data .= chr(self::$END_OF_ATTRIBUTES_BOUNDARY);
+
+        $data .= $this->getData();
+
+        return $data;
     }
 
     /**

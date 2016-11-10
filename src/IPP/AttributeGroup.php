@@ -53,11 +53,11 @@ class AttributeGroup {
         $currentAttributeGroup = -1;
         $bytePos = 0;
 
-        while($byte = substr($data, $bytePos, 1)) {
-            switch($byte) {
-                case chr(self::OPERATION_ATTRIBUTES_TAG):
-                case chr(self::JOB_ATTRIBUTES_TAG):
-                case chr(self::PRINTER_ATTRIBUTES_TAG):
+        while(($byte = substr($data, $bytePos, 1)) !== false) {
+            switch(ord($byte)) {
+                case self::OPERATION_ATTRIBUTES_TAG:
+                case self::JOB_ATTRIBUTES_TAG:
+                case self::PRINTER_ATTRIBUTES_TAG:
                     $currentAttributeGroup++;
                     break;
             }
@@ -75,6 +75,15 @@ class AttributeGroup {
 
         return $attributeGroupData;
 
+    }
+
+    public function toBinary() {
+        $data = chr($this->getType());
+        foreach($this->getAttributes() as $attribute) {
+            $data .= $attribute->toBinary();
+        }
+
+        return $data;
     }
 
     /**

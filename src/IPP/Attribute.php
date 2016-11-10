@@ -57,35 +57,10 @@ class Attribute {
      * @param string $name
      * @param [] $values
      */
-    public function __construct($type, $name, $values) {
+    public function __construct($type, $name, array $values) {
         $this->type = $type;
         $this->name = $name;
         $this->values = $values;
-    }
-
-    public function addValue($value) {
-        $this->values[] = $value;
-    }
-
-    /**
-     * @return int
-     */
-    public function getType() {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * @return []
-     */
-    public function getValues() {
-        return $this->values;
     }
 
 
@@ -132,16 +107,15 @@ class Attribute {
             $bytePos += $length;
 
             if($name) {
-                $attributes[$currentAttribute] = new Attribute($type, $name, self::parseValue($type, $value));
+                $attributes[$currentAttribute] = new Attribute($type, $name, [self::unpackValue($type, $value)]);
                 $currentAttribute++;
             } else {
-                $attributes[$currentAttribute]->addValue($value);
+                $attributes[$currentAttribute - 1]->addValue($value);
             }
         }
 
         return $attributes;
     }
-
 
     /**
      * @param $type
@@ -149,7 +123,7 @@ class Attribute {
      * @return mixed
      * RFC2910 Section 3.9
      */
-    protected static function parseValue($type, $value) {
+    protected static function unpackValue($type, $value) {
         switch($type) {
             case self::TYPE_OUT_OF_BAND_DEFAULT:
             case self::TYPE_OUT_OF_BAND_NO_VALUE:
@@ -172,9 +146,93 @@ class Attribute {
             case self::TYPE_CHARACTER_STRING_CHARSET:
             case self::TYPE_CHARACTER_STRING_NATURAL_LANGUAGE:
             case self::TYPE_CHARACTER_STRING_MIME_MEDIA_TYPE:
+            default:
                 return $value;
             //TODO: handle octet string types (binary)
         }
+    }
+
+    /**
+     * @param $type
+     * @param $value
+     * @return string
+     * RFC2910 Section 3.9
+     */
+    protected static function packValue($type, $value) {
+        switch($type) {
+            case self::TYPE_OUT_OF_BAND_DEFAULT:
+            case self::TYPE_OUT_OF_BAND_NO_VALUE:
+            case self::TYPE_OUT_OF_BAND_UNKNOWN:
+            case self::TYPE_OUT_OF_BAND_UNSUPPORTED:
+                return "";
+            case self::TYPE_INTEGER_GENERIC_INTEGER:
+            case self::TYPE_INTEGER_INTEGER:
+            case self::TYPE_INTEGER_ENUM:
+                return pack("N", $value);
+            case self::TYPE_INTEGER_BOOLEAN:
+                return $value ? chr(0) : chr(1);
+            case self::TYPE_CHARACTER_STRING_GENERIC:
+            case self::TYPE_CHARACTER_STRING_TEXT_WITHOUT_LANGUAGE:
+            case self::TYPE_CHARACTER_STRING_NAME_WITHOUT_LANGUAGE:
+            case self::TYPE_CHARACTER_STRING_RESERVED:
+            case self::TYPE_CHARACTER_STRING_KEYWORD:
+            case self::TYPE_CHARACTER_STRING_URI:
+            case self::TYPE_CHARACTER_STRING_URI_SCHEME:
+            case self::TYPE_CHARACTER_STRING_CHARSET:
+            case self::TYPE_CHARACTER_STRING_NATURAL_LANGUAGE:
+            case self::TYPE_CHARACTER_STRING_MIME_MEDIA_TYPE:
+            default:
+                return $value;
+            //TODO: handle octet string types (binary)
+        }
+    }
+
+    public function toBinary() {
+        $data = "";
+        $first = true;
+        foreach($this->getValues() as $value) {
+            $data .= chr($this->getType());
+            if($first) {
+                $data .= pack("n", strlen($this->getName()));
+                $data .= $this->getName();
+
+                $first = false;
+            } else {
+                $data .= pack("n", 0);
+            }
+
+            $value = self::packValue($this->getType(), $value);
+
+            $data .= pack("n", strlen($value));
+            $data .= $value;
+        }
+
+        return $data;
+    }
+
+    public function addValue($value) {
+        $this->values[] = $value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * @return []
+     */
+    public function getValues() {
+        return $this->values;
     }
 
 }
