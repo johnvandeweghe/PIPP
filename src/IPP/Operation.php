@@ -2,9 +2,50 @@
 
 namespace jvandeweghe\IPP;
 
+//TODO: Handle improper data better
 class Operation {
     //Delimiter tag: (RFC2910 Section 3.5.1)
     private static $END_OF_ATTRIBUTES_BOUNDARY = 0x03;
+
+    //Operation IDs (RFC2911 Section 4.4.15)
+    const OPERATION_PRINT_JOB =     0x0001;
+    const OPERATION_PRINT_URI =     0x0002;
+    const OPERATION_VALIDATE_JOB =  0x0004;
+    const OPERATION_CREATE_JOB =    0x0005;
+    const OPERATION_SEND_DOCUMENT = 0x0006;
+    const OPERATION_SEND_URI =      0x0007;
+    const OPERATION_CANCEL_JOB =      0x0007;
+    const OPERATION_GET_JOB_ATTRIBUTES =      0x0007;
+    const OPERATION_SEND_URI =      0x0007;
+    const OPERATION_SEND_URI =      0x0007;
+    const OPERATION_SEND_URI =      0x0007;
+    /*
+      Value               Operation Name
+     -----------------   -------------------------------------
+
+     0x0000              reserved, not used
+     0x0001              reserved, not used
+     0x0002              Print-Job
+     0x0003              Print-URI
+     0x0004              Validate-Job
+     0x0005              Create-Job
+     0x0006              Send-Document
+     0x0007              Send-URI
+     0x0008              Cancel-Job
+     0x0009              Get-Job-Attributes
+     0x000A              Get-Jobs
+     0x000B              Get-Printer-Attributes
+     0x000C              Hold-Job
+     0x000D              Release-Job
+     0x000E              Restart-Job
+     0x000F              reserved for a future operation
+     0x0010              Pause-Printer
+     0x0011              Resume-Printer
+     0x0012              Purge-Jobs
+     0x0013-0x3FFF       reserved for future IETF standards track
+                         operations (see section 6.4)
+     0x4000-0x8FFF       reserved for vendor extensions (see section 6.4)
+     */
 
     protected $majorVersion;
     protected $minorVersion;
@@ -129,6 +170,17 @@ class Operation {
      */
     public function getData() {
         return $this->data;
+    }
+
+
+    public function getAttributeByName($name) {
+        foreach($this->getAttributeGroups() as $attributeGroup) {
+            if($attribute = $attributeGroup->getAttributeByName($name)) {
+                return $attribute;
+            }
+        }
+
+        return null;
     }
 
 

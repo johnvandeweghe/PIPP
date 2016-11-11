@@ -100,4 +100,14 @@ class AttributeGroup {
         return $this->attributes;
     }
 
+    public function getAttributeByName($name) {
+        foreach($this->getAttributes() as $attribute) {
+            if(strtolower($attribute->getName()) == strtolower($name)) {
+                return $attribute;
+            }
+        }
+
+        return null;
+    }
+
 }
