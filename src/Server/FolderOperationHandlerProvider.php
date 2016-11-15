@@ -3,7 +3,6 @@
 namespace jvandeweghe\IPP\Server;
 
 use jvandeweghe\IPP\Server\Exceptions\UnsupportedOperationException;
-use jvandeweghe\IPP\Server\OperationHandlers\OperationHandler;
 
 class FolderOperationHandlerProvider implements OperationHandlerProvider {
 

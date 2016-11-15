@@ -3,8 +3,6 @@
 namespace jvandeweghe\IPP\Attributes;
 
 //TODO: Make this an interface instead of having a type
-use SebastianBergmann\CodeCoverage\Report\Text;
-
 abstract class Attribute {
     //Value tag types (RFC 2190 Section 3.5.1)
     const TYPE_OUT_OF_BAND_UNSUPPORTED = 0x10;
