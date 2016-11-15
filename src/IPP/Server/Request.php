@@ -2,27 +2,15 @@
 
 namespace jvandeweghe\IPP\Server;
 
-use jvandeweghe\IPP\Operation;
-
 class Request {
     protected $headers = [];
-    protected $rawBody;
-
     protected $path;
+    protected $body;
 
-    /**
-     * @var $operation Operation
-     */
-    protected $operation;
-
-    public function __construct($headers, $body) {
+    public function __construct($headers, $path, $body) {
         $this->headers = $headers;
-        $this->rawBody = $body;
-
-        //TODO: Handle invalid data
-        $this->operation = Operation::buildFromBinary($body);
-
-        $this->path = $this->operation->getAttributeByName("printer-uri");
+        $this->path = $path;
+        $this->body = $body;
     }
 
     /**
@@ -45,16 +33,15 @@ class Request {
     /**
      * @return string
      */
-    public function getRawBody() {
-        return $this->rawBody;
+    public function getBody() {
+        return $this->body;
     }
 
     /**
-     * @return Operation
+     * @return string
      */
-    public function getOperation() {
-        return $this->operation;
+    public function getPath() {
+        return $this->path;
     }
-
 
 }

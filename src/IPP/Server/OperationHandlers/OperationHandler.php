@@ -3,7 +3,7 @@
 namespace jvandeweghe\IPP\Server\OperationHandlers;
 
 use jvandeweghe\IPP\Operation;
-use jvandeweghe\IPP\Printer;
+use jvandeweghe\IPP\Printer\Printer;
 
 interface OperationHandler {
     /**

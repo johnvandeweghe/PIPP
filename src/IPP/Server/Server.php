@@ -2,30 +2,43 @@
 
 namespace jvandeweghe\IPP\Server;
 
+use jvandeweghe\IPP\Operation;
 use jvandeweghe\IPP\Printer\PrinterPool;
-use jvandeweghe\IPP\Server\Exceptions\InvalidRequestException;
+use jvandeweghe\IPP\Server\OperationHandlers\OperationHandler;
 
 class Server {
-    const IPP_CONTENT_TYPE = "application/ipp";
     /**
      * @var PrinterPool
      */
     private $printerPool;
+    /**
+     * @var OperationHandlerProvider
+     */
+    private $operationHandlerProvider;
 
-    public function __construct(PrinterPool $printerPool) {
+    public function __construct(PrinterPool $printerPool, OperationHandlerProvider $operationHandlerProvider) {
         $this->printerPool = $printerPool;
+        $this->operationHandlerProvider = $operationHandlerProvider;
     }
 
-    public function handleRequest(Request $request){
-        if($request->getHeaderByName("Content-Type") != self::IPP_CONTENT_TYPE){
-            throw new InvalidRequestException("Content-Type expected to be \"" . self::IPP_CONTENT_TYPE . "\", but got: \"" . $request->getHeaderByName("Content-Type") . "\"");
-        }
+    /**
+     * @param Operation $requestOperation
+     * @return Operation
+     */
+    public function handleRequest(Operation $requestOperation){
+        /**
+         * @var $operationHandler OperationHandler
+         */
+        $operationHandler = new $this->operationHandlerProvider->getOperationHandlersById($requestOperation->getOperationIdOrStatusCode());
 
-        $responseOperation = //TODO: Use reflection to find implementers of OperationHandler, and compare operationId type to "getOperationId"
+        return $operationHandler->handleOperation($requestOperation, $this->routePrinter($requestOperation->getAttributeByName("printer-uri")));
     }
 
     //TODO: Maybe move this into Request?
     private function routePrinter($url) {
+        if(!$url) {
+            return null;
+        }
         $url = filter_var($url, FILTER_SANITIZE_URL);
         $explodedURL = explode('/', $url);
         $queue = array_pop($explodedURL);
