@@ -3,6 +3,8 @@
 namespace jvandeweghe\IPP;
 
 //TODO: Make this an interface instead of having a type
+use jvandeweghe\IPP\Attributes\Attribute;
+
 class AttributeGroup {
     //Delimiter tag: (RFC2910 Section 3.5.1)
     const OPERATION_ATTRIBUTES_TAG = 0x01;

@@ -1,5 +1,5 @@
 {
-    "name": "jvandeweghe/ipp",
+    "name": "johnvandeweghe/pipp",
     "description": "An IPP parser for PHP, following RFC 2910/2911",
     "type": "library",
     "require-dev": {
@@ -14,7 +14,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "jvandeweghe\\": "src/"
+            "jvandeweghe\\IPP\\": "src/"
         }
     }
 }

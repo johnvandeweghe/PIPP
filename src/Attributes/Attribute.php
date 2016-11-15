@@ -1,9 +1,11 @@
 <?php
 
-namespace jvandeweghe\IPP;
+namespace jvandeweghe\IPP\Attributes;
 
 //TODO: Make this an interface instead of having a type
-class Attribute {
+use SebastianBergmann\CodeCoverage\Report\Text;
+
+abstract class Attribute {
     //Value tag types (RFC 2190 Section 3.5.1)
     const TYPE_OUT_OF_BAND_UNSUPPORTED = 0x10;
     const TYPE_OUT_OF_BAND_DEFAULT = 0x11;
@@ -39,28 +41,84 @@ class Attribute {
     //0x4A-0x5F reserved for future character string types
 
     /**
-     * @var $type int
-     */
-    protected $type;
-    /**
      * @var $name string
      */
     protected $name;
     /**
-     * @var $values []
+     * @var $values mixed[]
      */
     protected $values;
 
     /**
      * Attribute constructor.
-     * @param int $type
      * @param string $name
      * @param [] $values
      */
-    public function __construct($type, $name, array $values) {
-        $this->type = $type;
+    public function __construct($name, array $values) {
         $this->name = $name;
-        $this->values = $values;
+        foreach($values as $value) {
+            $this->validateValue($value);
+            $this->values[] = $value;
+        }
+    }
+
+    protected function validateValue($value) {
+        return;
+        throw new \Exception(); //TODO: Write special exception for this
+        //TODO: Make abstract, and use to validate length limits, ranges, etc
+    }
+
+    /**
+     * @param $type
+     * @param $name
+     * @param $values
+     * @return Attribute
+     * @throws UnknownAttributeTypeException
+     */
+    //TODO: Write validation into each attribute constructor
+    public static function factory($type, $name, $values) {
+        switch($type) {
+            case self::TYPE_OUT_OF_BAND_DEFAULT:
+                return new DefaultAttribute($name, $values);
+            case self::TYPE_OUT_OF_BAND_NO_VALUE:
+                return new NoValueAttribute($name, $values);
+            case self::TYPE_OUT_OF_BAND_UNKNOWN:
+                return new UnknownAttribute($name, $values);
+            case self::TYPE_OUT_OF_BAND_UNSUPPORTED:
+                return new UnsupportedAttribute($name, $values);
+            case self::TYPE_INTEGER_GENERIC_INTEGER:
+                return new GenericIntegerAttribute($name, $values);
+            case self::TYPE_INTEGER_INTEGER:
+                return new IntegerAttribute($name, $values);
+            case self::TYPE_INTEGER_ENUM:
+                return new EnumAttribute($name, $values);
+            case self::TYPE_INTEGER_BOOLEAN:
+                return new BooleanAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_GENERIC:
+                return new GenericStringAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_TEXT_WITHOUT_LANGUAGE:
+                return new TextWithoutLanguageAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_NAME_WITHOUT_LANGUAGE:
+                return new NameWithoutLanguageAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_KEYWORD:
+                return new KeywordAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_URI:
+                return new URIAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_URI_SCHEME:
+                return new URISchemeAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_CHARSET:
+                return new CharsetAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_NATURAL_LANGUAGE:
+                return new NaturalLanguageAttribute($name, $values);
+            case self::TYPE_CHARACTER_STRING_MIME_MEDIA_TYPE:
+                return new MIMEMediaTypeAttribute($name, $values);
+
+            case self::TYPE_CHARACTER_STRING_RESERVED:
+            default:
+                throw new UnknownAttributeTypeException($type . " is unknown");
+
+            //TODO: handle octet string types (binary)
+        }
     }
 
 
@@ -85,6 +143,9 @@ class Attribute {
     -----------------------------------------------
      */
     public static function buildFromBinary($data) {
+        /**
+         * @var $attributes Attribute[]
+         */
         $attributes = [];
 
         if(!$data) {
@@ -107,85 +168,28 @@ class Attribute {
             $bytePos += $length;
 
             if($name) {
-                $attributes[$currentAttribute] = new Attribute($type, $name, [self::unpackValue($type, $value)]);
+                $attributes[$currentAttribute] = self::factory($type, $name, []);
                 $currentAttribute++;
-            } else {
-                $attributes[$currentAttribute - 1]->addValue($value);
             }
+            $attributes[$currentAttribute - 1]->addRawValue($value);
         }
 
         return $attributes;
     }
 
     /**
-     * @param $type
      * @param $value
      * @return mixed
      * RFC2910 Section 3.9
      */
-    protected static function unpackValue($type, $value) {
-        switch($type) {
-            case self::TYPE_OUT_OF_BAND_DEFAULT:
-            case self::TYPE_OUT_OF_BAND_NO_VALUE:
-            case self::TYPE_OUT_OF_BAND_UNKNOWN:
-            case self::TYPE_OUT_OF_BAND_UNSUPPORTED:
-                return null;
-            case self::TYPE_INTEGER_GENERIC_INTEGER:
-            case self::TYPE_INTEGER_INTEGER:
-            case self::TYPE_INTEGER_ENUM:
-                return unpack("N", $value)[1];
-            case self::TYPE_INTEGER_BOOLEAN:
-                return ord($value) == 1;
-            case self::TYPE_CHARACTER_STRING_GENERIC:
-            case self::TYPE_CHARACTER_STRING_TEXT_WITHOUT_LANGUAGE:
-            case self::TYPE_CHARACTER_STRING_NAME_WITHOUT_LANGUAGE:
-            case self::TYPE_CHARACTER_STRING_RESERVED:
-            case self::TYPE_CHARACTER_STRING_KEYWORD:
-            case self::TYPE_CHARACTER_STRING_URI:
-            case self::TYPE_CHARACTER_STRING_URI_SCHEME:
-            case self::TYPE_CHARACTER_STRING_CHARSET:
-            case self::TYPE_CHARACTER_STRING_NATURAL_LANGUAGE:
-            case self::TYPE_CHARACTER_STRING_MIME_MEDIA_TYPE:
-            default:
-                return $value;
-            //TODO: handle octet string types (binary)
-        }
-    }
+    protected abstract function unpackValue($value);
 
     /**
-     * @param $type
      * @param $value
      * @return string
      * RFC2910 Section 3.9
      */
-    protected static function packValue($type, $value) {
-        switch($type) {
-            case self::TYPE_OUT_OF_BAND_DEFAULT:
-            case self::TYPE_OUT_OF_BAND_NO_VALUE:
-            case self::TYPE_OUT_OF_BAND_UNKNOWN:
-            case self::TYPE_OUT_OF_BAND_UNSUPPORTED:
-                return "";
-            case self::TYPE_INTEGER_GENERIC_INTEGER:
-            case self::TYPE_INTEGER_INTEGER:
-            case self::TYPE_INTEGER_ENUM:
-                return pack("N", $value);
-            case self::TYPE_INTEGER_BOOLEAN:
-                return $value ? chr(0) : chr(1);
-            case self::TYPE_CHARACTER_STRING_GENERIC:
-            case self::TYPE_CHARACTER_STRING_TEXT_WITHOUT_LANGUAGE:
-            case self::TYPE_CHARACTER_STRING_NAME_WITHOUT_LANGUAGE:
-            case self::TYPE_CHARACTER_STRING_RESERVED:
-            case self::TYPE_CHARACTER_STRING_KEYWORD:
-            case self::TYPE_CHARACTER_STRING_URI:
-            case self::TYPE_CHARACTER_STRING_URI_SCHEME:
-            case self::TYPE_CHARACTER_STRING_CHARSET:
-            case self::TYPE_CHARACTER_STRING_NATURAL_LANGUAGE:
-            case self::TYPE_CHARACTER_STRING_MIME_MEDIA_TYPE:
-            default:
-                return $value;
-            //TODO: handle octet string types (binary)
-        }
-    }
+    protected abstract function packValue($value);
 
     public function toBinary() {
         $data = "";
@@ -201,7 +205,7 @@ class Attribute {
                 $data .= pack("n", 0);
             }
 
-            $value = self::packValue($this->getType(), $value);
+            $value = $this->packValue($value);
 
             $data .= pack("n", strlen($value));
             $data .= $value;
@@ -210,16 +214,16 @@ class Attribute {
         return $data;
     }
 
-    public function addValue($value) {
+    public function addRawValue($rawValue) {
+        $value = $this->unpackValue($rawValue);
+        $this->validateValue($value);
         $this->values[] = $value;
     }
 
     /**
      * @return int
      */
-    public function getType() {
-        return $this->type;
-    }
+    public abstract function getType();
 
     /**
      * @return string
@@ -229,7 +233,7 @@ class Attribute {
     }
 
     /**
-     * @return []
+     * @return mixed[]
      */
     public function getValues() {
         return $this->values;

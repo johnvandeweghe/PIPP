@@ -14,27 +14,28 @@ class PrinterPool {
      */
     public function __construct($printers = []){
         foreach($printers as $printer) {
-            $this->addPrinter($printer);
+            $this->addPrinter($printer, $printer->getPrinterName());
         }
     }
 
     /**
      * @param Printer $printer
+     * @param $path
      * @throws DuplicatePrinterException
      */
-    public function addPrinter(Printer $printer) {
-        if(isset($this->pool[$printer->getName()])) {
-            throw new DuplicatePrinterException("Printer names within a pool must be unique");
+    public function addPrinter(Printer $printer, $path) {
+        if(isset($this->pool[$path])) {
+            throw new DuplicatePrinterException("Printer paths within a pool must be unique");
         }
 
-        $this->pool[$printer->getName()] = $printer;
+        $this->pool[$path] = $printer;
     }
 
     /**
-     * @param $name
+     * @param $path
      * @return Printer|null
      */
-    public function getPrinter($name) {
-        return isset($this->pool[$name]) ? $this->pool[$name] : null;
+    public function getPrinter($path) {
+        return isset($this->pool[$path]) ? $this->pool[$path] : null;
     }
 }
