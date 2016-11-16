@@ -2,7 +2,8 @@
 
 namespace jvandeweghe\IPP\Attributes;
 
-//TODO: Make this an interface instead of having a type
+use jvandeweghe\IPP\Attributes\Exceptions\UnknownAttributeTypeException;
+
 abstract class Attribute {
     //Value tag types (RFC 2190 Section 3.5.1)
     const TYPE_OUT_OF_BAND_UNSUPPORTED = 0x10;
@@ -77,13 +78,13 @@ abstract class Attribute {
     public static function factory($type, $name, $values) {
         switch($type) {
             case self::TYPE_OUT_OF_BAND_DEFAULT:
-                return new DefaultAttribute($name, $values);
+                return new DefaultAttribute($name);
             case self::TYPE_OUT_OF_BAND_NO_VALUE:
-                return new NoValueAttribute($name, $values);
+                return new NoValueAttribute($name);
             case self::TYPE_OUT_OF_BAND_UNKNOWN:
-                return new UnknownAttribute($name, $values);
+                return new UnknownAttribute($name);
             case self::TYPE_OUT_OF_BAND_UNSUPPORTED:
-                return new UnsupportedAttribute($name, $values);
+                return new UnsupportedAttribute($name);
             case self::TYPE_INTEGER_GENERIC_INTEGER:
                 return new GenericIntegerAttribute($name, $values);
             case self::TYPE_INTEGER_INTEGER:
@@ -113,6 +114,8 @@ abstract class Attribute {
 
             case self::TYPE_CHARACTER_STRING_RESERVED:
             default:
+                return new GenericStringAttribute($name, $values);
+                //TODO: below
                 throw new UnknownAttributeTypeException($type . " is unknown");
 
             //TODO: handle octet string types (binary)

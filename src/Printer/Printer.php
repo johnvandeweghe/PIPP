@@ -2,6 +2,7 @@
 
 namespace jvandeweghe\IPP\Printer;
 
+use jvandeweghe\IPP\Attributes\Attribute;
 use jvandeweghe\IPP\Attributes\BooleanAttribute;
 use jvandeweghe\IPP\Attributes\CharsetAttribute;
 use jvandeweghe\IPP\Attributes\EnumAttribute;
@@ -17,157 +18,204 @@ use jvandeweghe\IPP\Attributes\UnsupportedAttribute;
 use jvandeweghe\IPP\Attributes\URIAttribute;
 use jvandeweghe\IPP\Attributes\URISchemeAttribute;
 
-class Printer {
-    //4.4 Printer Description Attributes
-    /**
-     * @var URIAttribute
-     */
-    protected $printerURISupported;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $uriSecuritySupported;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $uriAuthenticationSupported;
-    /**
-     * @var NameWithoutLanguageAttribute TODO:NameWithLanguage 127
-     */
-    protected $printerName;
-    /**
-     * @var TextWithoutLanguageAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO:TextWithLanguage 127
-     */
-    protected $printerLocation;
-    /**
-     * @var TextWithoutLanguageAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $printerInfo;
-    /**
-     * @var URIAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $printerMoreInfo;
-    /**
-     * @var URIAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $printerDriverInstaller;
-    /**
-     * @var TextWithoutLanguageAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO:TextWithLanguage 127
-     */
-    protected $printerMakeAndModel;
-    /**
-     * @var URIAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $printerMoreInfoManufacturer;
-    /**
-     * @var EnumAttribute
-     */
-    protected $printerState;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $printerStateReasons;
-    /**
-     * @var TextWithoutLanguageAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO:TextWithLanguage MAX
-     */
-    protected $printerStateMessage;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $ippVersionsSupported;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $operationsSupported;
-    /**
-     * @var BooleanAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $multipleDocumentJobsSupported;
-    /**
-     * @var CharsetAttribute
-     */
-    protected $charsetConfigured;
-    /**
-     * @var CharsetAttribute
-     */
-    protected $charsetSupported;
-    /**
-     * @var NaturalLanguageAttribute
-     */
-    protected $naturalLanguageConfigured;
-    /**
-     * @var NaturalLanguageAttribute
-     */
-    protected $generatedNaturalLanguageSupported;
-    /**
-     * @var MIMEMediaTypeAttribute
-     */
-    protected $documentFormatDefault;
-    /**
-     * @var MIMEMediaTypeAttribute
-     */
-    protected $documentFormatSupported;
-    /**
-     * @var BooleanAttribute
-     */
-    protected $printerIsAcceptingJobs;
-    /**
-     * @var IntegerAttribute
-     */
-    protected $queuedJobCount;
-    /**
-     * @var TextWithoutLanguageAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO:TextWithLanguage 127
-     */
-    protected $printerMessageFromOperator;
-    /**
-     * @var BooleanAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $colorSupported;
-    /**
-     * @var URISchemeAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $referenceURISchemesSupported;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $pdlOverrideSupported;
-    /**
-     * @var IntegerAttribute
-     */
-    protected $printerUpTime;
-    /**
-     * @var UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO: DateTimeAttribute
-     */
-    protected $printerCurrentTime;
-    /**
-     * @var IntegerAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $multipleOperationTimeOut;
-    /**
-     * @var KeywordAttribute
-     */
-    protected $compressionSupported;
-    /**
-     * @var UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO: RangeOfIntegerAttribute
-     */
-    protected $jobKOctetsSupported;
-    /**
-     * @var UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO: RangeOfIntegerAttribute
-     */
-    protected $jobImpressionsSupported;
-    /**
-     * @var UnknownAttribute|NoValueAttribute|UnsupportedAttribute TODO: RangeOfIntegerAttribute
-     */
-    protected $jobMediaSheetsSupported;
-    /**
-     * @var IntegerAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $pagesPerMinute;
-    /**
-     * @var IntegerAttribute|UnknownAttribute|NoValueAttribute|UnsupportedAttribute
-     */
-    protected $pagesPerMinuteColor;
+interface Printer {
 
-    //TODO: Constructor, or more likely a factory, or a builder maybe?
+    public function getIPPMajorVersion();
+    public function getIPPMinorVersion();
+    //TODO: The rest of the operations
 
+    /**
+     * @param KeywordAttribute $requestedAttributes
+     * @return \jvandeweghe\IPP\Attributes\Attribute[]
+     */
+    public function getSupportedAttributes($requestedAttributes);
+
+    /**
+     * TODO: This is not used currently, and might need a filter parameter like above
+     * @return Attribute[]
+     */
+    public function getUnsupportedAttributes();
+
+    /**
+     * @return URIAttribute
+     */
+    public function getPrinterURISupported();
+
+    /**
+     * @return KeywordAttribute
+     */
+    public function getUriSecuritySupported();
+
+    /**
+     * @return KeywordAttribute
+     */
+    public function getUriAuthenticationSupported();
+
+    /**
+     * @return NameWithoutLanguageAttribute
+     */
+    public function getPrinterName();
+
+    /**
+     * @return NoValueAttribute|TextWithoutLanguageAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPrinterLocation();
+
+    /**
+     * @return NoValueAttribute|TextWithoutLanguageAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPrinterInfo();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute|URIAttribute
+     */
+    public function getPrinterMoreInfo();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute|URIAttribute
+     */
+    public function getPrinterDriverInstaller();
+
+    /**
+     * @return NoValueAttribute|TextWithoutLanguageAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPrinterMakeAndModel();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute|URIAttribute
+     */
+    public function getPrinterMoreInfoManufacturer();
+
+    /**
+     * @return EnumAttribute
+     */
+    public function getPrinterState();
+
+    /**
+     * @return KeywordAttribute
+     */
+    public function getPrinterStateReasons();
+
+    /**
+     * @return NoValueAttribute|TextWithoutLanguageAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPrinterStateMessage();
+
+    /**
+     * @return KeywordAttribute
+     */
+    public function getIppVersionsSupported();
+
+    /**
+     * @return KeywordAttribute
+     */
+    public function getOperationsSupported();
+
+    /**
+     * @return BooleanAttribute|NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getMultipleDocumentJobsSupported();
+
+    /**
+     * @return CharsetAttribute
+     */
+    public function getCharsetConfigured();
+
+    /**
+     * @return CharsetAttribute
+     */
+    public function getCharsetSupported();
+
+    /**
+     * @return NaturalLanguageAttribute
+     */
+    public function getNaturalLanguageConfigured();
+
+    /**
+     * @return NaturalLanguageAttribute
+     */
+    public function getGeneratedNaturalLanguageSupported();
+
+    /**
+     * @return MIMEMediaTypeAttribute
+     */
+    public function getDocumentFormatDefault();
+
+    /**
+     * @return MIMEMediaTypeAttribute
+     */
+    public function getDocumentFormatSupported();
+
+    /**
+     * @return BooleanAttribute
+     */
+    public function getPrinterIsAcceptingJobs();
+
+    /**
+     * @return IntegerAttribute
+     */
+    public function getQueuedJobCount();
+    /**
+     * @return NoValueAttribute|TextWithoutLanguageAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPrinterMessageFromOperator();
+
+    /**
+     * @return BooleanAttribute|NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getColorSupported();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute|URISchemeAttribute
+     */
+    public function getReferenceURISchemesSupported();
+    /**
+     * @return KeywordAttribute
+     */
+    public function getPdlOverrideSupported();
+
+    /**
+     * @return IntegerAttribute
+     */
+    public function getPrinterUpTime();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPrinterCurrentTime();
+
+    /**
+     * @return IntegerAttribute|NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getMultipleOperationTimeOut();
+
+    /**
+     * @return KeywordAttribute
+     */
+    public function getCompressionSupported();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getJobKOctetsSupported();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getJobImpressionsSupported();
+
+    /**
+     * @return NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getJobMediaSheetsSupported();
+
+    /**
+     * @return IntegerAttribute|NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPagesPerMinute();
+
+    /**
+     * @return IntegerAttribute|NoValueAttribute|UnknownAttribute|UnsupportedAttribute
+     */
+    public function getPagesPerMinuteColor();
 }

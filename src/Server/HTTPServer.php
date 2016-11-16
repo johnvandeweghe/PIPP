@@ -2,8 +2,10 @@
 
 namespace jvandeweghe\IPP\Server;
 
+use jvandeweghe\IPP\Attributes\Exceptions\UnknownAttributeTypeException;
 use jvandeweghe\IPP\Operation;
 use jvandeweghe\IPP\Server\Exceptions\InvalidRequestException;
+use jvandeweghe\IPP\Server\Logger\Logger;
 
 class HTTPServer {
     const IPP_CONTENT_TYPE = "application/ipp";
@@ -34,7 +36,13 @@ class HTTPServer {
             return new Response(400);
         }
 
-        $operation = Operation::buildFromBinary($request->getBody());
+        try {
+            $operation = Operation::buildFromBinary($request->getBody());
+        } catch(UnknownAttributeTypeException $exception) {
+            $this->server->log("Got UnknownAttributeTypeException while parsing body: " . $exception->getMessage(), Logger::LEVEL_ERROR);
+
+            return new Response(500);
+        }
 
         $responseOperation = $this->server->handleRequest($operation);
 

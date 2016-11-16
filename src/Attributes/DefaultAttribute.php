@@ -3,6 +3,10 @@ namespace jvandeweghe\IPP\Attributes;
 
 
 class DefaultAttribute extends Attribute  {
+    public function __construct($name) {
+        parent::__construct($name, [null]);
+    }
+
     protected function unpackValue($value){
         return null;
     }

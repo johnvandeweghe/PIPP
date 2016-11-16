@@ -19,12 +19,14 @@ class Response {
     }
 
     public function dump() {
-        foreach($this->headers as $key => $value) {
+        foreach ($this->headers as $key => $value) {
             header("$key: $value");
         }
 
         http_response_code($this->statusCode);
 
-        echo $this->operation->toBinary();
+        if ($this->operation) {
+            echo $this->operation->toBinary();
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace jvandeweghe\IPP\Server\OperationHandlers;
 
 
+use jvandeweghe\IPP\AttributeGroup;
 use jvandeweghe\IPP\Operation;
 use jvandeweghe\IPP\Printer\Printer;
 
@@ -26,8 +27,14 @@ class GetPrinterAttributesOperationHandler implements OperationHandler {
      * @return Operation
      */
     public function handleOperation(Operation $operation, Printer $printer) {
-        //TODO: Build an operation response from printer data
+        $requestedAttributes = $operation->getAttributeByName("requested-attributes");
 
-        return $operation;
+        $printerAttributes = $printer->getSupportedAttributes($requestedAttributes);
+
+        $printerAttributeGroup = new AttributeGroup(AttributeGroup::PRINTER_ATTRIBUTES_TAG, $printerAttributes);
+
+        $responseOperation = new Operation($printer->getIPPMajorVersion(), $printer->getIPPMinorVersion(), 0, $operation->getRequestId(), [$printerAttributeGroup], null);
+
+        return $responseOperation;
     }
 }

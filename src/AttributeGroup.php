@@ -2,7 +2,7 @@
 
 namespace jvandeweghe\IPP;
 
-//TODO: Make this an interface instead of having a type
+//TODO: Make this an interface instead of having a type?
 use jvandeweghe\IPP\Attributes\Attribute;
 
 class AttributeGroup {

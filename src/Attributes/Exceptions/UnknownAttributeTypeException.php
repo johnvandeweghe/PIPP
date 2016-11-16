@@ -1,6 +1,6 @@
 <?php
 
-namespace jvandeweghe\IPP\Attributes;
+namespace jvandeweghe\IPP\Attributes\Exceptions;
 
 class UnknownAttributeTypeException extends \Exception {
 

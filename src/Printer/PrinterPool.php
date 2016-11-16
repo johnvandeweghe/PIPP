@@ -14,7 +14,7 @@ class PrinterPool {
      */
     public function __construct($printers = []){
         foreach($printers as $printer) {
-            $this->addPrinter($printer, $printer->getPrinterName());
+            $this->addPrinter($printer, $printer->getPrinterURISupported()->getValues()[0]);
         }
     }
 
