@@ -23,6 +23,7 @@ class OperationTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(Attribute::TYPE_CHARACTER_STRING_KEYWORD, $operation->getAttributeGroups()[0]->getAttributes()[3]->getType());
         $this->assertEmpty($operation->getData());
     }
+
     public function testBuildSampleBody() {
         $sampleText = "AgAACwAAAAEBRwASYXR0cmlidXRlcy1jaGFyc2V0AAV1dGYtOEgAG2F0dHJpYnV0ZXMtbmF0dXJhbC1sYW5ndWFnZQAFZW4tdXNFAAtwcmludGVyLXVyaQAdaHR0cDovLzE5Mi4xNjguMzMuOTk6ODAvcHJpbnREABRyZXF1ZXN0ZWQtYXR0cmlidXRlcwAVY29tcHJlc3Npb24tc3VwcG9ydGVkRAAAABBjb3BpZXMtc3VwcG9ydGVkRAAAAAxjdXBzLXZlcnNpb25EAAAAGWRvY3VtZW50LWZvcm1hdC1zdXBwb3J0ZWREAAAADW1hcmtlci1jb2xvcnNEAAAAEm1hcmtlci1oaWdoLWxldmVsc0QAAAANbWFya2VyLWxldmVsc0QAAAARbWFya2VyLWxvdy1sZXZlbHNEAAAADm1hcmtlci1tZXNzYWdlRAAAAAxtYXJrZXItbmFtZXNEAAAADG1hcmtlci10eXBlc0QAAAATbWVkaWEtY29sLXN1cHBvcnRlZEQAAAAkbXVsdGlwbGUtZG9jdW1lbnQtaGFuZGxpbmctc3VwcG9ydGVkRAAAABRvcGVyYXRpb25zLXN1cHBvcnRlZEQAAAAacHJpbnQtY29sb3ItbW9kZS1zdXBwb3J0ZWREAAAADXByaW50ZXItYWxlcnREAAAAGXByaW50ZXItYWxlcnQtZGVzY3JpcHRpb25EAAAAGXByaW50ZXItaXMtYWNjZXB0aW5nLWpvYnNEAAAAIHByaW50ZXItbWFuZGF0b3J5LWpvYi1hdHRyaWJ1dGVzRAAAAA1wcmludGVyLXN0YXRlRAAAABVwcmludGVyLXN0YXRlLW1lc3NhZ2VEAAAAFXByaW50ZXItc3RhdGUtcmVhc29ucwM=";
 
@@ -64,6 +65,7 @@ class OperationTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals(base64_decode($sampleText), $operation->toBinary());
     }
+
     public function testParseSampleBodyThenToBinaryIt() {
         $sampleText = "AgAACwAAAAEBRwASYXR0cmlidXRlcy1jaGFyc2V0AAV1dGYtOEgAG2F0dHJpYnV0ZXMtbmF0dXJhbC1sYW5ndWFnZQAFZW4tdXNFAAtwcmludGVyLXVyaQAdaHR0cDovLzE5Mi4xNjguMzMuOTk6ODAvcHJpbnREABRyZXF1ZXN0ZWQtYXR0cmlidXRlcwAVY29tcHJlc3Npb24tc3VwcG9ydGVkRAAAABBjb3BpZXMtc3VwcG9ydGVkRAAAAAxjdXBzLXZlcnNpb25EAAAAGWRvY3VtZW50LWZvcm1hdC1zdXBwb3J0ZWREAAAADW1hcmtlci1jb2xvcnNEAAAAEm1hcmtlci1oaWdoLWxldmVsc0QAAAANbWFya2VyLWxldmVsc0QAAAARbWFya2VyLWxvdy1sZXZlbHNEAAAADm1hcmtlci1tZXNzYWdlRAAAAAxtYXJrZXItbmFtZXNEAAAADG1hcmtlci10eXBlc0QAAAATbWVkaWEtY29sLXN1cHBvcnRlZEQAAAAkbXVsdGlwbGUtZG9jdW1lbnQtaGFuZGxpbmctc3VwcG9ydGVkRAAAABRvcGVyYXRpb25zLXN1cHBvcnRlZEQAAAAacHJpbnQtY29sb3ItbW9kZS1zdXBwb3J0ZWREAAAADXByaW50ZXItYWxlcnREAAAAGXByaW50ZXItYWxlcnQtZGVzY3JpcHRpb25EAAAAGXByaW50ZXItaXMtYWNjZXB0aW5nLWpvYnNEAAAAIHByaW50ZXItbWFuZGF0b3J5LWpvYi1hdHRyaWJ1dGVzRAAAAA1wcmludGVyLXN0YXRlRAAAABVwcmludGVyLXN0YXRlLW1lc3NhZ2VEAAAAFXByaW50ZXItc3RhdGUtcmVhc29ucwM=";
         $sampleBody = base64_decode($sampleText);
@@ -71,5 +73,50 @@ class OperationTest extends PHPUnit_Framework_TestCase {
         $operation = Operation::buildFromBinary($sampleBody);
 
         $this->assertEquals($sampleBody, $operation->toBinary());
+    }
+
+    public function testGetValidAttributesByName() {
+        $attributesCharset = new \jvandeweghe\IPP\Attributes\CharsetAttribute("attributes-charset", ["utf-8"]);
+        $attributesNaturalLanguage = new \jvandeweghe\IPP\Attributes\NaturalLanguageAttribute("attributes-natural-language", ["en-us"]);
+        $attributes = [
+            $attributesCharset,
+            $attributesNaturalLanguage,
+        ];
+
+        $attributeGroups = [
+            new \jvandeweghe\IPP\AttributeGroup(\jvandeweghe\IPP\AttributeGroup::OPERATION_ATTRIBUTES_TAG, $attributes)
+        ];
+
+        $operation = new Operation(2, 0, 11, 1, $attributeGroups, "");
+
+        $this->assertEquals($attributesCharset, $operation->getAttributeByName('attributes-charset'));
+        $this->assertEquals($attributesNaturalLanguage, $operation->getAttributeByName('attributes-natural-language'));
+    }
+
+    public function testGetInvalidAttributesByNameReturnsNull() {
+        $attributesCharset = new \jvandeweghe\IPP\Attributes\CharsetAttribute("attributes-charset", ["utf-8"]);
+        $attributes = [
+            $attributesCharset,
+        ];
+
+        $attributeGroups = [
+            new \jvandeweghe\IPP\AttributeGroup(\jvandeweghe\IPP\AttributeGroup::OPERATION_ATTRIBUTES_TAG, $attributes)
+        ];
+
+        $operation = new Operation(2, 0, 11, 1, $attributeGroups, "");
+
+        $this->assertEquals(null, $operation->getAttributeByName('attributes-natural-language'));
+    }
+
+    public function testEmptyAttributeGroupsDoesntExplode() {
+        $attributeGroups = [];
+        $operation = new Operation(2, 0, 11, 1, $attributeGroups, "");
+
+        $this->assertEquals($attributeGroups, $operation->getAttributeGroups());
+
+        $binary = $operation->toBinary();
+        $operation = Operation::buildFromBinary($binary);
+
+        $this->assertEquals($attributeGroups, $operation->getAttributeGroups());
     }
 }
