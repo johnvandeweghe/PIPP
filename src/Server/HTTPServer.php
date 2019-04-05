@@ -1,11 +1,11 @@
 <?php
 
-namespace jvandeweghe\IPP\Server;
+namespace IPP\Server;
 
-use jvandeweghe\IPP\Attributes\Exceptions\UnknownAttributeTypeException;
-use jvandeweghe\IPP\Operation;
-use jvandeweghe\IPP\Server\Exceptions\InvalidRequestException;
-use jvandeweghe\IPP\Server\Logger\Logger;
+use IPP\Attributes\Exceptions\UnknownAttributeTypeException;
+use IPP\Operation;
+use IPP\Server\Exceptions\InvalidRequestException;
+use IPP\Server\Logger\Logger;
 
 class HTTPServer {
     const IPP_CONTENT_TYPE = "application/ipp";

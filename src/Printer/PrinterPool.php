@@ -1,8 +1,8 @@
 <?php
 
-namespace jvandeweghe\IPP\Printer;
+namespace IPP\Printer;
 
-use jvandeweghe\IPP\Printer\Exceptions\DuplicatePrinterException;
+use IPP\Printer\Exceptions\DuplicatePrinterException;
 
 class PrinterPool {
     protected $pool = [];

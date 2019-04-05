@@ -1,8 +1,8 @@
 <?php
 
-namespace jvandeweghe\IPP\Server;
+namespace IPP\Server;
 
-use jvandeweghe\IPP\Server\Exceptions\UnsupportedOperationException;
+use IPP\Server\Exceptions\UnsupportedOperationException;
 
 interface OperationHandlerProvider {
     /**

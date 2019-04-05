@@ -1,22 +1,6 @@
 <?php
 
-namespace jvandeweghe\IPP\Printer;
-
-use jvandeweghe\IPP\Attributes\Attribute;
-use jvandeweghe\IPP\Attributes\BooleanAttribute;
-use jvandeweghe\IPP\Attributes\CharsetAttribute;
-use jvandeweghe\IPP\Attributes\EnumAttribute;
-use jvandeweghe\IPP\Attributes\IntegerAttribute;
-use jvandeweghe\IPP\Attributes\KeywordAttribute;
-use jvandeweghe\IPP\Attributes\MIMEMediaTypeAttribute;
-use jvandeweghe\IPP\Attributes\NameWithoutLanguageAttribute;
-use jvandeweghe\IPP\Attributes\NaturalLanguageAttribute;
-use jvandeweghe\IPP\Attributes\NoValueAttribute;
-use jvandeweghe\IPP\Attributes\TextWithoutLanguageAttribute;
-use jvandeweghe\IPP\Attributes\UnknownAttribute;
-use jvandeweghe\IPP\Attributes\UnsupportedAttribute;
-use jvandeweghe\IPP\Attributes\URIAttribute;
-use jvandeweghe\IPP\Attributes\URISchemeAttribute;
+namespace IPP\Printer;
 
 interface Printer {
 
@@ -26,7 +10,7 @@ interface Printer {
 
     /**
      * @param KeywordAttribute $requestedAttributes
-     * @return \jvandeweghe\IPP\Attributes\Attribute[]
+     * @return \IPP\Attributes\Attribute[]
      */
     public function getSupportedAttributes($requestedAttributes);
 

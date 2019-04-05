@@ -1,22 +1,22 @@
 <?php
 
-namespace jvandeweghe\IPP\Printer;
+namespace IPP\Printer;
 
-use jvandeweghe\IPP\Attributes\Attribute;
-use jvandeweghe\IPP\Attributes\BooleanAttribute;
-use jvandeweghe\IPP\Attributes\CharsetAttribute;
-use jvandeweghe\IPP\Attributes\EnumAttribute;
-use jvandeweghe\IPP\Attributes\IntegerAttribute;
-use jvandeweghe\IPP\Attributes\KeywordAttribute;
-use jvandeweghe\IPP\Attributes\MIMEMediaTypeAttribute;
-use jvandeweghe\IPP\Attributes\NameWithoutLanguageAttribute;
-use jvandeweghe\IPP\Attributes\NaturalLanguageAttribute;
-use jvandeweghe\IPP\Attributes\NoValueAttribute;
-use jvandeweghe\IPP\Attributes\TextWithoutLanguageAttribute;
-use jvandeweghe\IPP\Attributes\UnknownAttribute;
-use jvandeweghe\IPP\Attributes\UnsupportedAttribute;
-use jvandeweghe\IPP\Attributes\URIAttribute;
-use jvandeweghe\IPP\Attributes\URISchemeAttribute;
+use IPP\Attributes\Attribute;
+use IPP\Attributes\BooleanAttribute;
+use IPP\Attributes\CharsetAttribute;
+use IPP\Attributes\EnumAttribute;
+use IPP\Attributes\IntegerAttribute;
+use IPP\Attributes\KeywordAttribute;
+use IPP\Attributes\MIMEMediaTypeAttribute;
+use IPP\Attributes\NameWithoutLanguageAttribute;
+use IPP\Attributes\NaturalLanguageAttribute;
+use IPP\Attributes\NoValueAttribute;
+use IPP\Attributes\TextWithoutLanguageAttribute;
+use IPP\Attributes\UnknownAttribute;
+use IPP\Attributes\UnsupportedAttribute;
+use IPP\Attributes\URIAttribute;
+use IPP\Attributes\URISchemeAttribute;
 
 class DefaultPrinter implements Printer {
 //4.4 Printer Description Attributes
@@ -250,7 +250,7 @@ class DefaultPrinter implements Printer {
             new EnumAttribute("printer-state", [3]),
             new KeywordAttribute("printer-state-reasons", ["none"]),
             new KeywordAttribute("ipp-versions-supported", [pack("C*", [1,1])]),
-            new KeywordAttribute("operations-supported", [\jvandeweghe\IPP\Operation::OPERATION_GET_PRINTER_ATTRIBUTES]),
+            new KeywordAttribute("operations-supported", [\IPP\Operation::OPERATION_GET_PRINTER_ATTRIBUTES]),
             new BooleanAttribute("multiple-document-jobs-supported", [false]),
             new CharsetAttribute("charset-configured", ["utf-8"]),
             new CharsetAttribute("charset-supported", ["utf-8"]),
@@ -267,7 +267,7 @@ class DefaultPrinter implements Printer {
     }
     /**
      * @param KeywordAttribute $requestedAttributes
-     * @return \jvandeweghe\IPP\Attributes\Attribute[]
+     * @return \IPP\Attributes\Attribute[]
      */
     public function getSupportedAttributes($requestedAttributes) {
         $attributes = [];

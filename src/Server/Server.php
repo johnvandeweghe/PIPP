@@ -1,12 +1,12 @@
 <?php
 
-namespace jvandeweghe\IPP\Server;
+namespace IPP\Server;
 
-use jvandeweghe\IPP\Operation;
-use jvandeweghe\IPP\Printer\PrinterPool;
-use jvandeweghe\IPP\Server\Exceptions\UnsupportedOperationException;
-use jvandeweghe\IPP\Server\Logger\Logger;
-use jvandeweghe\IPP\Server\OperationHandlers\OperationHandler;
+use IPP\Operation;
+use IPP\Printer\PrinterPool;
+use IPP\Server\Exceptions\UnsupportedOperationException;
+use IPP\Server\Logger\Logger;
+use IPP\Server\OperationHandlers\OperationHandler;
 
 class Server {
     /**

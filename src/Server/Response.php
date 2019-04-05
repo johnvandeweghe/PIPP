@@ -1,8 +1,8 @@
 <?php
 
-namespace jvandeweghe\IPP\Server;
+namespace IPP\Server;
 
-use jvandeweghe\IPP\Operation;
+use IPP\Operation;
 
 class Response {
     protected $headers = [];

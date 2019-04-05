@@ -1,9 +1,9 @@
 <?php
 
-namespace jvandeweghe\IPP\Server\OperationHandlers;
+namespace IPP\Server\OperationHandlers;
 
-use jvandeweghe\IPP\Operation;
-use jvandeweghe\IPP\Printer\Printer;
+use IPP\Operation;
+use IPP\Printer\Printer;
 
 interface OperationHandler {
     /**

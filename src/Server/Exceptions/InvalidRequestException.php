@@ -1,5 +1,5 @@
 <?php
-namespace jvandeweghe\IPP\Server\Exceptions;
+namespace IPP\Server\Exceptions;
 
 class InvalidRequestException extends \Exception {
 

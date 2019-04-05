@@ -1,8 +1,8 @@
 <?php
 
-namespace jvandeweghe\IPP\Server;
+namespace IPP\Server;
 
-use jvandeweghe\IPP\Server\Exceptions\UnsupportedOperationException;
+use IPP\Server\Exceptions\UnsupportedOperationException;
 
 class FolderOperationHandlerProvider implements OperationHandlerProvider {
 
@@ -30,7 +30,7 @@ class FolderOperationHandlerProvider implements OperationHandlerProvider {
     }
 
     private function getOperationHandlerNamespace() {
-        return '\jvandeweghe\IPP\Server\OperationHandlers\\';
+        return '\IPP\Server\OperationHandlers\\';
     }
 
     /**

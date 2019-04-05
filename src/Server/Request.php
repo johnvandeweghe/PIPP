@@ -1,6 +1,6 @@
 <?php
 
-namespace jvandeweghe\IPP\Server;
+namespace IPP\Server;
 
 class Request {
     protected $headers = [];

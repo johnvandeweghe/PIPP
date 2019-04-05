@@ -1,11 +1,11 @@
 <?php
 
-namespace jvandeweghe\IPP;
+namespace IPP;
 
-//TODO: Handle improper data better
-class Operation {
+class Operation
+{
     //Delimiter tag: (RFC2910 Section 3.5.1)
-    private static $END_OF_ATTRIBUTES_BOUNDARY = 0x03;
+    const END_OF_ATTRIBUTES_BOUNDARY = 0x03;
 
     //Operation IDs (RFC2911 Section 4.4.15)
     //0x0000              reserved, not used
@@ -47,7 +47,14 @@ class Operation {
      * @param AttributeGroup[] $attributeGroups
      * @param string $data
      */
-    public function __construct($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId, $attributeGroups, $data) {
+    public function __construct(
+        int $majorVersion,
+        int $minorVersion,
+        int $operationIdOrStatusCode,
+        int $requestId,
+        array $attributeGroups,
+        string $data
+    ) {
         $this->majorVersion = $majorVersion;
         $this->minorVersion = $minorVersion;
         $this->operationIdOrStatusCode = $operationIdOrStatusCode;
@@ -56,107 +63,7 @@ class Operation {
         $this->data = $data;
     }
 
-    /**
-     * Parse as per RFC2910 Section 3.1
-     * Boundaries and types are defined in 3.4.X
-     * @param $body
-     * @return Operation
-     *
-        -----------------------------------------------
-        |                  version-number             |   2 bytes  - required
-        -----------------------------------------------
-        |               operation-id (request)        |
-        |                      or                     |   2 bytes  - required
-        |               status-code (response)        |
-        -----------------------------------------------
-        |                   request-id                |   4 bytes  - required
-        -----------------------------------------------
-        |                 attribute-group             |   n bytes - 0 or more
-        -----------------------------------------------
-        |              end-of-attributes-tag          |   1 byte   - required
-        -----------------------------------------------
-        |                     data                    |   q bytes  - optional
-        -----------------------------------------------
-
-     */
-    public static function buildFromBinary($body) {
-        $majorVersion = unpack("C", substr($body, 0, 1))[1];
-        $minorVersion = unpack("C", substr($body, 1, 1))[1];
-        $operationIdOrStatusCode = unpack("n", substr($body, 2, 2))[1];
-        $requestId = unpack("N", substr($body, 4, 4))[1];
-
-        $endOfAttributesTag = strpos($body, chr(self::$END_OF_ATTRIBUTES_BOUNDARY), 8);
-
-        $attributesData = substr($body, 8, $endOfAttributesTag - 8);
-
-        $attributeGroups = AttributeGroup::buildFromBinary($attributesData);
-
-        $data = substr($body, $endOfAttributesTag + 1);
-
-        return new Operation($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId, $attributeGroups, $data);
-    }
-
-    public function toBinary() {
-        $data = pack("C", $this->getMajorVersion());
-        $data .= pack("C", $this->getMinorVersion());
-        $data .= pack("n", $this->getOperationIdOrStatusCode());
-        $data .= pack("N", $this->getRequestId());
-
-        foreach($this->getAttributeGroups() as $attributeGroup) {
-            $data .= $attributeGroup->toBinary();
-        }
-
-        $data .= chr(self::$END_OF_ATTRIBUTES_BOUNDARY);
-
-        $data .= $this->getData();
-
-        return $data;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMajorVersion() {
-        return $this->majorVersion;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMinorVersion() {
-        return $this->minorVersion;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRequestId() {
-        return $this->requestId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOperationIdOrStatusCode() {
-        return $this->operationIdOrStatusCode;
-    }
-
-    /**
-     * @return AttributeGroup[]
-     */
-    public function getAttributeGroups() {
-        return $this->attributeGroups;
-    }
-
-    /**
-     * @return string
-     */
-    public function getData() {
-        return $this->data;
-    }
-
-
-    public function getAttributeByName($name) {
+    public function getAttributeByName(string $name): ?Attribute {
         foreach($this->getAttributeGroups() as $attributeGroup) {
             if($attribute = $attributeGroup->getAttributeByName($name)) {
                 return $attribute;
@@ -166,5 +73,52 @@ class Operation {
         return null;
     }
 
+    /**
+     * @return int
+     */
+    public function getMajorVersion(): int
+    {
+        return $this->majorVersion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinorVersion(): int
+    {
+        return $this->minorVersion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOperationIdOrStatusCode(): int
+    {
+        return $this->operationIdOrStatusCode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRequestId(): int
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * @return AttributeGroup[]
+     */
+    public function getAttributeGroups()
+    {
+        return $this->attributeGroups;
+    }
+
+    /**
+     * @return string
+     */
+    public function getData(): string
+    {
+        return $this->data;
+    }
 
 }

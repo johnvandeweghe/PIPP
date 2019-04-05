@@ -1,6 +1,6 @@
 <?php
 
-namespace jvandeweghe\IPP\Printer\Exceptions;
+namespace IPP\Printer\Exceptions;
 
 class DuplicatePrinterException extends \Exception {
 

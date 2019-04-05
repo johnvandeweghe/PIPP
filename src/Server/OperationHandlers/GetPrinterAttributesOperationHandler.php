@@ -1,16 +1,16 @@
 <?php
 
-namespace jvandeweghe\IPP\Server\OperationHandlers;
+namespace IPP\Server\OperationHandlers;
 
 
-use jvandeweghe\IPP\AttributeGroup;
-use jvandeweghe\IPP\Operation;
-use jvandeweghe\IPP\Printer\Printer;
+use IPP\AttributeGroup;
+use IPP\Operation;
+use IPP\Printer\Printer;
 
 /**
  * https://tools.ietf.org/html/rfc2911#section-3.3.4
  * Class GetPrinterAttributesOperationHandler
- * @package jvandeweghe\IPP\Server\OperationHandlers
+ * @package IPP\Server\OperationHandlers
  */
 class GetPrinterAttributesOperationHandler implements OperationHandler {
 
