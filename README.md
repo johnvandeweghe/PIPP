@@ -3,6 +3,12 @@
 ## Why PHP for IPP?
 IPP uses HTTP as a transport layer, and therefor PHP makes decent sense to be a candidate for protocol implementation. IPP requests are essentially an HTTP request with a binary encoded body called the Operations Layer.
 
+### But isn't PHP really slow? Especially compared to CUPS which is C++!
+Well, first of all, [PHP is faster than ever](http://www.zend.com/en/resources/php7_infographic). Second of all, the amount of time difference we are talking here matters very little to the domain of printers, which are have common performance expectations of several magnitudes slower than any speed improvements you'd gain from C++.
+
+Regardless, more than one (CUPS) system for more complicated virtual printers that is really easy to write against is a great thing.
+And on the client side, there really is no option for direct from webserver IPP printing.
+
 ## What
 IPP 1.1 is defined by two RFCs:
 
