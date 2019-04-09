@@ -2,8 +2,6 @@
 
 namespace IPP\Encoding;
 
-use IPP\AttributeGroup;
-
 class AttributeGroupDeserializer
 {
     //Delimiter tag: (RFC2910 Section 3.5.1)

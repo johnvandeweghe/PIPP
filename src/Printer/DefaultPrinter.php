@@ -250,7 +250,7 @@ class DefaultPrinter implements Printer {
             new EnumAttribute("printer-state", [3]),
             new KeywordAttribute("printer-state-reasons", ["none"]),
             new KeywordAttribute("ipp-versions-supported", [pack("C*", [1,1])]),
-            new KeywordAttribute("operations-supported", [\IPP\Operation::OPERATION_GET_PRINTER_ATTRIBUTES]),
+            new KeywordAttribute("operations-supported", [\IPP\Encoding\Operation::OPERATION_GET_PRINTER_ATTRIBUTES]),
             new BooleanAttribute("multiple-document-jobs-supported", [false]),
             new CharsetAttribute("charset-configured", ["utf-8"]),
             new CharsetAttribute("charset-supported", ["utf-8"]),

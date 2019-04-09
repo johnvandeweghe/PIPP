@@ -2,8 +2,6 @@
 
 namespace IPP\Encoding;
 
-use IPP\Operation;
-
 class OperationSerializer
 {
     /**

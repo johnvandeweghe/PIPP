@@ -1,6 +1,6 @@
 <?php
 
-namespace IPP;
+namespace IPP\Encoding;
 
 class Attribute {
     //Value tag types (RFC 2190 Section 3.5.1)
@@ -46,7 +46,7 @@ class Attribute {
      */
     protected $name;
     /**
-     * @var $values mixed[]
+     * @var mixed[] $values
      */
     protected $values;
 
@@ -56,18 +56,11 @@ class Attribute {
         $this->values = $values;
     }
 
-    /**
-     * @return int
-     */
     public function getType(): int
     {
         return $this->type;
     }
 
-
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
