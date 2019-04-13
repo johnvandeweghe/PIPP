@@ -2,6 +2,7 @@
 namespace IPP\Operation\Request;
 
 use IPP\Operation\PrinterRequest;
+use Psr\Http\Message\UriInterface;
 
 //RFC2911 3.2.1.1
 class CreateJob extends PrinterRequest
@@ -37,7 +38,7 @@ class CreateJob extends PrinterRequest
         int $requestId,
         string $attributesCharset,
         string $attributesNaturalLanguage,
-        string $printerUri,
+        UriInterface $printerUri,
         ?string $requestingUserName,
         ?string $jobName,
         ?bool $ippAttributeFidelity,

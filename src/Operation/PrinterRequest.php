@@ -3,12 +3,13 @@
 namespace IPP\Operation;
 
 use IPP\Operation;
+use Psr\Http\Message\UriInterface;
 
 abstract class PrinterRequest extends Operation
 {
 
     /**
-     * @var string
+     * @var UriInterface
      */
     private $printerUri;
 
@@ -18,7 +19,7 @@ abstract class PrinterRequest extends Operation
         int $requestId,
         string $attributesCharset,
         string $attributesNaturalLanguage,
-        string $printerUri,
+        UriInterface $printerUri,
         ?string $data
     )
     {
@@ -26,7 +27,7 @@ abstract class PrinterRequest extends Operation
         $this->printerUri = $printerUri;
     }
 
-    public function getPrinterUri(): string
+    public function getPrinterUri(): UriInterface
     {
         return $this->printerUri;
     }

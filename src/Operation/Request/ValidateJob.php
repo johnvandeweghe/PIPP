@@ -1,6 +1,8 @@
 <?php
 namespace IPP\Operation\Request;
 
+use Psr\Http\Message\UriInterface;
+
 class ValidateJob extends PrintJob
 {
     public function __construct(
@@ -9,7 +11,7 @@ class ValidateJob extends PrintJob
         int $requestId,
         string $attributesCharset,
         string $attributesNaturalLanguage,
-        string $printerUri,
+        UriInterface $printerUri,
         ?string $requestingUserName,
         ?string $jobName,
         ?bool $ippAttributeFidelity,

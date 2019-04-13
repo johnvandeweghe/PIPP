@@ -1,10 +1,12 @@
 <?php
 namespace IPP\Operation\Request;
 
+use Psr\Http\Message\UriInterface;
+
 class PrintUri extends PrintJob
 {
     /**
-     * @var string
+     * @var UriInterface
      */
     private $dataUri;
 
@@ -14,7 +16,7 @@ class PrintUri extends PrintJob
         int $requestId,
         string $attributesCharset,
         string $attributesNaturalLanguage,
-        string $printerUri,
+        UriInterface $printerUri,
         ?string $requestingUserName,
         ?string $jobName,
         ?bool $ippAttributeFidelity,
@@ -25,7 +27,7 @@ class PrintUri extends PrintJob
         ?int $jobKOctets,
         ?int $jobImpressions,
         ?int $jobMediaSheets,
-        string $dataUri
+        UriInterface $dataUri
     ) {
         parent::__construct($version, $operationId, $requestId, $attributesCharset, $attributesNaturalLanguage,
             $printerUri, $requestingUserName, $jobName, $ippAttributeFidelity, $documentName, $compression,
@@ -33,10 +35,7 @@ class PrintUri extends PrintJob
         $this->dataUri = $dataUri;
     }
 
-    /**
-     * @return string
-     */
-    public function getDataUri(): string
+    public function getDataUri(): UriInterface
     {
         return $this->dataUri;
     }
