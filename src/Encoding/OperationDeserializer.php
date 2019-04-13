@@ -49,7 +49,8 @@ class OperationDeserializer
 
         $attributeGroups = $this->attributeGroupDeserializer->buildFromBinaryString($attributesData);
 
-        $data = substr($body, $endOfAttributesTag + 1);
+        $dataStartPosition = $endOfAttributesTag + 1;
+        $data = $dataStartPosition !== strlen($body) ? substr($body, $dataStartPosition) : null;
 
         return new Operation($majorVersion, $minorVersion, $operationIdOrStatusCode, $requestId, $attributeGroups, $data);
     }

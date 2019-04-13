@@ -4,7 +4,7 @@ namespace IPP\Operation\Request;
 use IPP\Operation\PrinterRequest;
 
 //RFC2911 3.2.1.1
-class PrintJob extends PrinterRequest
+class CreateJob extends PrinterRequest
 {
     /**
      * @var string|null
@@ -18,22 +18,6 @@ class PrintJob extends PrinterRequest
      * @var bool|null
      */
     private $ippAttributeFidelity;
-    /**
-     * @var string|null
-     */
-    private $documentName;
-    /**
-     * @var string|null
-     */
-    private $compression;
-    /**
-     * @var string|null
-     */
-    private $documentFormat;
-    /**
-     * @var string|null
-     */
-    private $documentNaturalLanguage;
     /**
      * @var int|null
      */
@@ -57,10 +41,6 @@ class PrintJob extends PrinterRequest
         ?string $requestingUserName,
         ?string $jobName,
         ?bool $ippAttributeFidelity,
-        ?string $documentName,
-        ?string $compression,
-        ?string $documentFormat,
-        ?string $documentNaturalLanguage,
         ?int $jobKOctets,
         ?int $jobImpressions,
         ?int $jobMediaSheets,
@@ -72,10 +52,6 @@ class PrintJob extends PrinterRequest
         $this->requestingUserName = $requestingUserName;
         $this->jobName = $jobName;
         $this->ippAttributeFidelity = $ippAttributeFidelity;
-        $this->documentName = $documentName;
-        $this->compression = $compression;
-        $this->documentFormat = $documentFormat;
-        $this->documentNaturalLanguage = $documentNaturalLanguage;
         $this->jobKOctets = $jobKOctets;
         $this->jobImpressions = $jobImpressions;
         $this->jobMediaSheets = $jobMediaSheets;
@@ -94,26 +70,6 @@ class PrintJob extends PrinterRequest
     public function getIppAttributeFidelity(): ?bool
     {
         return $this->ippAttributeFidelity;
-    }
-
-    public function getDocumentName(): ?string
-    {
-        return $this->documentName;
-    }
-
-    public function getCompression(): ?string
-    {
-        return $this->compression;
-    }
-
-    public function getDocumentFormat(): ?string
-    {
-        return $this->documentFormat;
-    }
-
-    public function getDocumentNaturalLanguage(): ?string
-    {
-        return $this->documentNaturalLanguage;
     }
 
     public function getJobKOctets(): ?int

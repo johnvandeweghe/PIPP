@@ -30,7 +30,7 @@ abstract class Operation
      */
     private $attributesNaturalLanguage;
     /**
-     * @var string
+     * @var string|null
      */
     private $data;
 
@@ -40,7 +40,7 @@ abstract class Operation
         int $requestId,
         string $attributesCharset,
         string $attributesNaturalLanguage,
-        string $data
+        ?string $data
     )
     {
         $this->version = $version;
@@ -76,7 +76,7 @@ abstract class Operation
         return $this->attributesNaturalLanguage;
     }
 
-    public function getData(): string
+    public function getData(): ?string
     {
         return $this->data;
     }

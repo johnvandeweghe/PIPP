@@ -45,7 +45,7 @@ class Operation
      * @param int $operationIdOrStatusCode
      * @param int $requestId
      * @param AttributeGroup[] $attributeGroups
-     * @param string $data
+     * @param string|null $data
      */
     public function __construct(
         int $majorVersion,
@@ -53,7 +53,7 @@ class Operation
         int $operationIdOrStatusCode,
         int $requestId,
         array $attributeGroups,
-        string $data
+        ?string $data
     ) {
         $this->majorVersion = $majorVersion;
         $this->minorVersion = $minorVersion;
@@ -73,33 +73,21 @@ class Operation
         return null;
     }
 
-    /**
-     * @return int
-     */
     public function getMajorVersion(): int
     {
         return $this->majorVersion;
     }
 
-    /**
-     * @return int
-     */
     public function getMinorVersion(): int
     {
         return $this->minorVersion;
     }
 
-    /**
-     * @return int
-     */
     public function getOperationIdOrStatusCode(): int
     {
         return $this->operationIdOrStatusCode;
     }
 
-    /**
-     * @return int
-     */
     public function getRequestId(): int
     {
         return $this->requestId;
@@ -113,10 +101,7 @@ class Operation
         return $this->attributeGroups;
     }
 
-    /**
-     * @return string
-     */
-    public function getData(): string
+    public function getData(): ?string
     {
         return $this->data;
     }

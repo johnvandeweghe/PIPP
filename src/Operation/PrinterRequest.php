@@ -19,7 +19,7 @@ abstract class PrinterRequest extends Operation
         string $attributesCharset,
         string $attributesNaturalLanguage,
         string $printerUri,
-        string $data
+        ?string $data
     )
     {
         parent::__construct($version, $operationId, $requestId, $attributesCharset, $attributesNaturalLanguage, $data);
