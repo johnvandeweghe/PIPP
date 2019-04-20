@@ -4,6 +4,7 @@ namespace IPP;
 use DateTime;
 use Psr\Http\Message\UriInterface;
 
+// RFC 2911 4.4
 class PrinterDescription
 {
     /**
