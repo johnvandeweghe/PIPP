@@ -5,7 +5,7 @@ use DateTime;
 use Psr\Http\Message\UriInterface;
 
 // RFC2911 4.3
-class Job
+class JobDescription
 {
     /**
      * @var UriInterface

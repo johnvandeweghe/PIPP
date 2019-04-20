@@ -1,13 +1,13 @@
 <?php
 namespace IPP\Operation\Response;
 
-use IPP\Job;
+use IPP\JobDescription;
 use IPP\Operation\Response;
 
 class PrintJob extends Response
 {
     /**
-     * @var Job
+     * @var JobDescription
      */
     private $job;
 
@@ -21,14 +21,14 @@ class PrintJob extends Response
         ?string $detailedStatusMessage,
         ?string $documentAccessError,
         ?array $unsupportedAttributed,
-        Job $job
+        JobDescription $job
     ) {
         parent::__construct($version, $statusCode, $requestId, $attributesCharset, $attributesNaturalLanguage,
             $statusMessage, $detailedStatusMessage, $documentAccessError, $unsupportedAttributed);
         $this->job = $job;
     }
 
-    public function getJob(): Job
+    public function getJob(): JobDescription
     {
         return $this->job;
     }
